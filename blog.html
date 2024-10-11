@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+
+{% block title %}Blog{% endblock %}
+
+{% block content %}
+<h1>Blog</h1>
+
+{% if is_admin %}
+    <h2>Create New Post</h2>
+    <form method="POST" action="{{ url_for('blog') }}">
+        {{ form.hidden_tag() }}
+        {{ form.title.label }} {{ form.title(size=32) }}<br>
+        {{ form.content.label }} {{ form.content(rows=4) }}<br>
+        {{ form.submit() }}
+    </form>
+{% else %}
+    <p>You must be logged in as an admin to create new posts.</p>
+{% endif %}
+
+<h2>Posts</h2>
+{% for post in posts %}
+    <div class="post">
+        <h2>{{ post.title }}</h2>
+        <p>{{ post.content }}</p>
+        {% if is_admin %}  <!-- Check if the user is an admin -->
+        <form method="POST" action="{{ url_for('delete_post', index=loop.index0) }}">
+            <button type="submit">Remove</button>
+        </form>
+        {% endif %}
+    </div>
+{% endfor %}
+
+
+{% endblock %}

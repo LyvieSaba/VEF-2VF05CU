@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cars</title>
+    <link rel="stylesheet" href="https://unpkg.com/@picocss/pico@latest/css/pico.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+</head>
+<body>
+
+    <nav>
+        <h1>Cars</h1>
+        <ul>
+            <li><a href="{{ url_for('index') }}">Home</a></li>
+            <li><a href="{{ url_for('blog') }}">Blog</a></li>
+            {% if 'username' in session %}
+                <li><a href="{{ url_for('logout') }}" class="button">Logout</a></li>
+            {% else %}
+                <li><a href="{{ url_for('login') }}" class="button">Login</a></li>
+            {% endif %}
+        </ul>
+    </nav>
+
+    <main class="container">
+        <h2>Available Cars</h2>
+        
+        <form method="GET" action="{{ url_for('cars') }}">
+            <input type="text" name="make" placeholder="Enter car make" value="{{ request.args.get('make', '') }}">
+            <input type="text" name="search" placeholder="Search for a car model" value="{{ request.args.get('search', '') }}">
+            <input type="submit" value="Search">
+        </form>
+
+        <div class="car-grid">
+            {% if cars %}
+                {% for car in cars %}
+                    <div class="car-card">
+                        <h3>{{ car.make }} - {{ car.model }}</h3>
+                        <p><strong>Year:</strong> {{ car.year }}</p>
+                        <p><strong>Fuel Type:</strong> {{ car.fuel_type }}</p>
+                        <p><strong>Transmission:</strong> {{ car.transmission }}</p>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <p>Please search for a car</p>
+                <p>if you want random cars leave both search bars blank and press "Search".</p>
+            {% endif %}
+        </div>
+    </main>
+
+    <footer>
+        {% include 'footer.html' %}
+    </footer>
+
+</body>
+</html>
